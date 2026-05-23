@@ -324,15 +324,16 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
 .pbwrap{width:220px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:0 auto;}
 .pb{height:100%;background:linear-gradient(90deg,var(--a),var(--b));border-radius:3px;width:0;transition:width .4s ease;}
 /* SPLASH */
-#splash{background:var(--bg);justify-content:center;align-items:center;text-align:center;padding:28px 22px;}
+#splash{background:var(--bg);justify-content:flex-start;align-items:stretch;text-align:center;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sp-inner{display:flex;flex-direction:column;align-items:center;padding:28px 22px 32px;min-height:100%;justify-content:center;position:relative;z-index:1;width:100%;}
 .spbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% 20%,rgba(14,168,116,.1) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(37,99,235,.06) 0%,transparent 60%);}
 .spgrid{position:absolute;inset:0;pointer-events:none;opacity:.4;background-image:linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px);background-size:36px 36px;}
-.splogo{width:80px;height:80px;background:linear-gradient(135deg,var(--a),var(--b));border-radius:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;z-index:1;animation:plse 3s ease-in-out infinite;}
+.splogo{width:76px;height:76px;background:linear-gradient(135deg,var(--a),var(--b));border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;z-index:1;animation:plse 3s ease-in-out infinite;flex-shrink:0;}
 .splogo svg{width:36px;height:36px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 .sptitle{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,var(--tx) 40%,var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;line-height:1;}
-.sptag{color:var(--tx2);font-size:14px;margin:10px 0 28px;position:relative;z-index:1;}
+.sptag{color:var(--tx2);font-size:13px;margin:8px 0 20px;position:relative;z-index:1;}
 .sptag strong{color:var(--a);}
-.fpills{display:flex;flex-direction:column;gap:9px;width:100%;margin-bottom:26px;position:relative;z-index:1;}
+.fpills{display:flex;flex-direction:column;gap:8px;width:100%;margin-bottom:20px;position:relative;z-index:1;}
 .fp{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-radius:var(--rads);padding:12px 14px;text-align:left;box-shadow:var(--sh);animation:fup .5s ease both;}
 .fp:nth-child(1){animation-delay:.05s;}
 .fp:nth-child(2){animation-delay:.12s;}
@@ -362,6 +363,7 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
 <!-- SPLASH -->
 <div class="screen active" id="splash">
   <div class="spbg"></div><div class="spgrid"></div>
+  <div class="sp-inner">
   <div class="splogo"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
   <div class="sptitle">Tarp</div>
   <div class="sptag">Safe. Connected. <strong>Always.</strong></div>
@@ -370,9 +372,10 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
     <div class="fp"><div class="fpic" style="background:var(--rl)"><svg viewBox="0 0 24 24" style="stroke:var(--r)"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="fpt"><strong>One-Tap Emergency Alert</strong><span>Instantly notifies circle via WhatsApp, SMS &amp; email</span></div></div>
     <div class="fp"><div class="fpic" style="background:var(--bl)"><svg viewBox="0 0 24 24" style="stroke:var(--b)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="fpt"><strong>End-to-End Encrypted</strong><span>AES-256. Zero data sold. GDPR compliant.</span></div></div>
   </div>
-  <button class="btn ba" onclick="goTo('signup')" style="position:relative;z-index:1;margin-bottom:10px;">Get Started — Free</button>
-  <button class="btn bg" onclick="simLogin()" style="position:relative;z-index:1;">Sign In to Existing Account</button>
+  <button class="btn ba" onclick="goTo('signup')" style="position:relative;z-index:1;margin-bottom:10px;width:100%;">Get Started — Free</button>
+  <button class="btn bg" onclick="simLogin()" style="position:relative;z-index:1;width:100%;margin-bottom:4px;">Sign In to Existing Account</button>
   <div class="sptrust"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AES-256 · GDPR · Zero Ads</div>
+  </div><!-- /sp-inner -->
 </div>
 
 <!-- SIGNUP -->
@@ -407,7 +410,7 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
         </div>
       </div>
     </div>
-    <div class="fg"><label class="fl">Security PIN (6 digits)</label><input class="fi" type="password" placeholder="••••••" maxlength="6"></div>
+    <div class="fg"><label class="fl">Security PIN (6 digits)</label><input class="fi" type="password" placeholder="••••••" maxlength="6" id="rpin"></div>
     <button class="btn ba" onclick="startLoad()" style="margin-bottom:8px;">Create Profile &amp; Continue</button>
     <p style="text-align:center;color:var(--tx3);font-size:11px;line-height:1.7;">By continuing you agree to Tarp's Terms of Service.<br>Location data used <strong style="color:var(--tx2)">only for safety</strong>. Never sold.</p>
     <div style="height:10px;"></div>
@@ -917,6 +920,7 @@ function scheduleCheckin(){
 
 // ── TRIGGER ALERT ENGINE ──────────────────────────────────────
 function triggerAlert(title,msg,type){
+  if(PRE_AUTH.includes(A.screen))return;
   const entry={title,msg,type,loc:A.currentLoc,ts:new Date().toISOString(),contacts:getContacts().filter(c=>c.perms.alert).map(c=>c.name)};
   A.sosLog.push(entry);SS('sosLog',A.sosLog);
   pushActivity({ic:'alert',bg:'var(--rl)',stroke:'var(--r)',t:title,s:msg,tm:nowT()});
@@ -979,7 +983,9 @@ function toast(msg){
 
 // ── RT ALERTS ─────────────────────────────────────────────────
 let rtT=null;
+const PRE_AUTH=['splash','signup','loading'];
 function showRt(title,sub){
+  if(PRE_AUTH.includes(A.screen))return;
   document.getElementById('rtTitle').textContent=title;
   document.getElementById('rtSub').textContent=sub;
   const el=document.getElementById('rtal');
@@ -990,9 +996,9 @@ function closeRt(){document.getElementById('rtal').classList.remove('show');clea
 document.getElementById('rtal').onclick=closeRt;
 
 // timed demo alerts
-setTimeout(()=>showRt('Mama shared her location','Victoria Island — visible on your map'),18000);
-setTimeout(()=>showRt('Tunde checked in','He is safe — last seen Lekki Phase 1'),40000);
-setTimeout(()=>showRt('Chisom checked in safely','Home — no further alerts needed'),65000);
+setTimeout(()=>{if(['home','contacts','emergency','chat','settings','chatroom','premium'].includes(A.screen))showRt('Mama shared her location','Victoria Island — visible on your map');},18000);
+setTimeout(()=>{if(['home','contacts','emergency','chat','settings','chatroom','premium'].includes(A.screen))showRt('Tunde checked in','He is safe — last seen Lekki Phase 1');},40000);
+setTimeout(()=>{if(['home','contacts','emergency','chat','settings','chatroom','premium'].includes(A.screen))showRt('Chisom checked in safely','Home — no further alerts needed');},65000);
 
 // ── SIGN UP / PIN ─────────────────────────────────────────────
 function selType(el){
@@ -1008,19 +1014,19 @@ function selType(el){
 }
 
 function simLogin(){
-  const pinEl=document.getElementById('loginPin');
-  if(pinEl&&A.pin&&pinEl.value!==A.pin){toast('❌ Incorrect PIN');return;}
   goTo('loading');
   runProgress(['Verifying identity…','Decrypting profile…','Loading your data…'],()=>{
-    navTo('home');initApp();
-    setTimeout(()=>showRt('🔐 Secure session','All data encrypted · Tarp v3.0'),2000);
+    navTo('home');
+    setTimeout(()=>{initApp();},100);
+    setTimeout(()=>showRt('🔐 Secure session','All data encrypted · Tarp v3.0'),2200);
   });
 }
 
 function startLoad(){
-  const nm=(document.getElementById('rname').value.trim()||'Adaeze').split(' ')[0];
-  const ph=document.getElementById('rphone').value.trim()||'+234 800 000 0000';
-  const pin=document.getElementById('rpin').value.trim();
+  const nm=(document.getElementById('rname')?document.getElementById('rname').value.trim():'').split(' ')[0]||'Friend';
+  const ph=(document.getElementById('rphone')?document.getElementById('rphone').value.trim():'')||'+234 800 000 0000';
+  const pinEl=document.getElementById('rpin');
+  const pin=pinEl?pinEl.value.trim():'';
   if(pin&&pin.length<4){toast('PIN must be at least 4 digits');return;}
   A.name=nm;SS('uname',nm);
   A.phone=ph;SS('uphone',ph);
@@ -1028,8 +1034,9 @@ function startLoad(){
   SS('onboarded',true);A.onboarded=true;
   goTo('loading');
   runProgress(['Encrypting profile…','Setting up circle…','Activating triggers…','Almost ready…'],()=>{
-    navTo('home');initApp();
-    setTimeout(()=>showRt('👋 Welcome to Tarp!','Profile live · Encrypted ✓'),1800);
+    navTo('home');
+    setTimeout(()=>{initApp();},100);
+    setTimeout(()=>showRt('👋 Welcome to Tarp!','Profile live · Encrypted ✓'),2200);
   });
 }
 
