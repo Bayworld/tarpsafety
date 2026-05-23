@@ -325,7 +325,7 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
 .pb{height:100%;background:linear-gradient(90deg,var(--a),var(--b));border-radius:3px;width:0;transition:width .4s ease;}
 /* SPLASH */
 #splash{background:var(--bg);justify-content:flex-start;align-items:stretch;text-align:center;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.sp-inner{display:flex;flex-direction:column;align-items:center;padding:28px 22px 32px;min-height:100%;justify-content:center;position:relative;z-index:1;width:100%;}
+.sp-inner{display:flex;flex-direction:column;align-items:center;padding:24px 22px 28px;justify-content:center;position:relative;z-index:1;width:100%;}
 .spbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% 20%,rgba(14,168,116,.1) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(37,99,235,.06) 0%,transparent 60%);}
 .spgrid{position:absolute;inset:0;pointer-events:none;opacity:.4;background-image:linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px);background-size:36px 36px;}
 .splogo{width:76px;height:76px;background:linear-gradient(135deg,var(--a),var(--b));border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;z-index:1;animation:plse 3s ease-in-out infinite;flex-shrink:0;}
@@ -375,7 +375,7 @@ body{height:100%;background:var(--bg3);color:var(--tx);font-family:'Inter',sans-
   <button class="btn ba" onclick="goTo('signup')" style="position:relative;z-index:1;margin-bottom:10px;width:100%;">Get Started — Free</button>
   <button class="btn bg" onclick="simLogin()" style="position:relative;z-index:1;width:100%;margin-bottom:4px;">Sign In to Existing Account</button>
   <div class="sptrust"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AES-256 · GDPR · Zero Ads</div>
-  </div><!-- /sp-inner -->
+  </div>
 </div>
 
 <!-- SIGNUP -->
@@ -1165,47 +1165,120 @@ function removeContact(id){
 }
 
 function showAddContact(){
+  // Try Contact Picker API (Android Chrome)
+  if('contacts' in navigator && 'ContactsManager' in window){
+    navigator.contacts.select(['name','tel'],{multiple:false})
+      .then(results=>{
+        if(!results||!results.length)return;
+        const c=results[0];
+        const name=(c.name&&c.name[0])||'';
+        const phone=(c.tel&&c.tel[0])||'';
+        showAddForm(name,phone);
+      })
+      .catch(()=>showAddForm('',''));
+  } else {
+    // Fallback for iPhone / desktop
+    showAddForm('','');
+  }
+}
+
+function showAddForm(prefillName, prefillPhone){
   const existing=document.getElementById('addModal');if(existing)existing.remove();
+  const isAndroid='contacts' in navigator && 'ContactsManager' in window;
   const modal=document.createElement('div');
   modal.id='addModal';modal.className='modal-ov show';
   modal.innerHTML=`<div class="modal-sh" onclick="event.stopPropagation()">
     <div class="mhandle"></div>
     <div class="mtitle">Add Trusted Contact</div>
-    <div class="msub">This person will be able to receive your alerts</div>
-    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="nc-name" placeholder="Contact name" type="text"></div>
-    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="nc-phone" placeholder="+234 800 000 0000" type="tel"></div>
+    <div class="msub">This person will receive your location &amp; emergency alerts</div>
+    ${isAndroid ? `<button class="btn bg" onclick="pickFromContacts()" style="margin-bottom:14px;gap:10px;">
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--a);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Pick from Phone Contacts
+    </button>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><div style="flex:1;height:1px;background:var(--bd);"></div><span style="font-size:11px;color:var(--tx3);">or enter manually</span><div style="flex:1;height:1px;background:var(--bd);"></div></div>` : ''}
+    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="nc-name" placeholder="e.g. Mama, Tunde" type="text" value="${prefillName}"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="nc-phone" placeholder="+234 800 000 0000" type="tel" value="${prefillPhone}"></div>
     <div class="fg"><label class="fl">Relationship</label>
-      <select class="fi" id="nc-rel" style="appearance:none;">
+      <select class="fi" id="nc-rel" style="-webkit-appearance:none;appearance:none;">
         <option>Family</option><option>Friend</option><option>Colleague</option><option>Partner</option><option>Other</option>
       </select>
     </div>
+    <div class="fg">
+      <label class="fl">Permissions</label>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--bg3);border-radius:var(--rads);border:1px solid var(--bd);cursor:pointer;">
+          <span style="font-size:13px;font-weight:500;">📍 Location Sharing</span>
+          <input type="checkbox" id="nc-loc" checked style="width:18px;height:18px;accent-color:var(--a);">
+        </label>
+        <label style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--bg3);border-radius:var(--rads);border:1px solid var(--bd);cursor:pointer;">
+          <span style="font-size:13px;font-weight:500;">💬 Chat Access</span>
+          <input type="checkbox" id="nc-chat" checked style="width:18px;height:18px;accent-color:var(--a);">
+        </label>
+        <label style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--bg3);border-radius:var(--rads);border:1px solid var(--bd);cursor:pointer;">
+          <span style="font-size:13px;font-weight:500;">🆘 Emergency Alerts</span>
+          <input type="checkbox" id="nc-alert" checked style="width:18px;height:18px;accent-color:var(--a);">
+        </label>
+      </div>
+    </div>
     <div class="macts">
       <button class="btn bg" onclick="document.getElementById('addModal').remove()" style="flex:1;">Cancel</button>
-      <button class="btn ba" onclick="saveNewContact()" style="flex:1;">Add Contact</button>
+      <button class="btn ba" onclick="saveNewContact()" style="flex:1;">Add to Circle</button>
     </div>
   </div>`;
   modal.onclick=e=>{if(e.target===modal)modal.remove();};
   document.getElementById('shell').appendChild(modal);
+  // focus name if empty
+  if(!prefillName) setTimeout(()=>document.getElementById('nc-name')?.focus(),300);
+}
+
+function pickFromContacts(){
+  if('contacts' in navigator && 'ContactsManager' in window){
+    navigator.contacts.select(['name','tel'],{multiple:false})
+      .then(results=>{
+        if(!results||!results.length)return;
+        const c=results[0];
+        const name=(c.name&&c.name[0])||'';
+        const phone=(c.tel&&c.tel[0])||'';
+        const ni=document.getElementById('nc-name');
+        const pi=document.getElementById('nc-phone');
+        if(ni)ni.value=name;
+        if(pi)pi.value=phone;
+        toast('Contact loaded — tap Add to Circle');
+      })
+      .catch(()=>toast('Could not access contacts'));
+  }
 }
 
 function saveNewContact(){
-  const name=document.getElementById('nc-name').value.trim();
-  const phone=document.getElementById('nc-phone').value.trim();
-  if(!name||!phone){toast('Please fill in name and phone');return;}
+  const nameEl=document.getElementById('nc-name');
+  const phoneEl=document.getElementById('nc-phone');
+  const name=nameEl?nameEl.value.trim():'';
+  const phone=phoneEl?phoneEl.value.trim():'';
+  if(!name){toast('Please enter a name');return;}
+  if(!phone){toast('Please enter a phone number');return;}
+  const locEl=document.getElementById('nc-loc');
+  const chatEl=document.getElementById('nc-chat');
+  const alertEl=document.getElementById('nc-alert');
+  const perms={
+    loc:locEl?locEl.checked:true,
+    chat:chatEl?chatEl.checked:true,
+    alert:alertEl?alertEl.checked:true
+  };
   const clss=['avg','avb','avp','avo','avr'];
   const contacts=getContacts();
   const newC={
     id:'c_'+Date.now(),name,phone,
-    init:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
+    init:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||name.slice(0,2).toUpperCase(),
     cls:clss[contacts.length%clss.length],
-    online:false,perms:{loc:true,chat:true,alert:true},seed:[]
+    online:false,perms,seed:[]
   };
   contacts.push(newC);saveContacts(contacts);
   document.getElementById('addModal')?.remove();
   buildContacts();buildHomeCCs();buildEcList();buildChatList();
-  document.getElementById('cCount').textContent=contacts.length+' People';
+  const cc=document.getElementById('cCount');if(cc)cc.textContent=contacts.length+' People';
+  const cs=document.getElementById('cCountS');if(cs)cs.textContent=contacts.length+' people · edit permissions anytime';
   pushActivity({ic:'ok',bg:'var(--al)',stroke:'var(--a)',t:'Contact Added',s:`${name} added to your trusted circle`,tm:nowT()});
-  toast(`${name} added to your circle ✓`);
+  toast(name+' added to your circle ✓');
 }
 
 // ── TRIGGERS ──────────────────────────────────────────────────
